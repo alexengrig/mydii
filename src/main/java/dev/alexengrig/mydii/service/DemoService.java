@@ -14,13 +14,8 @@
  * limitations under the License.
  */
 
-plugins {
-    id 'java'
-}
+package dev.alexengrig.mydii.service;
 
-group 'dev.alexengrig'
-version '1.0-SNAPSHOT'
-
-repositories {
-    mavenCentral()
+public interface DemoService {
+    void demonstrate();
 }

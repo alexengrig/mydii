@@ -14,13 +14,11 @@
  * limitations under the License.
  */
 
-plugins {
-    id 'java'
-}
+package dev.alexengrig.mydii.domain;
 
-group 'dev.alexengrig'
-version '1.0-SNAPSHOT'
-
-repositories {
-    mavenCentral()
+public class DemoDomain {
+    @Override
+    public String toString() {
+        return "This is Demo!!1";
+    }
 }

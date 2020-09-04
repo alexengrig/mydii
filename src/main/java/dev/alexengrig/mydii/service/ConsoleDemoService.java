@@ -14,13 +14,19 @@
  * limitations under the License.
  */
 
-plugins {
-    id 'java'
-}
+package dev.alexengrig.mydii.service;
 
-group 'dev.alexengrig'
-version '1.0-SNAPSHOT'
+import dev.alexengrig.mydii.repository.DemoRepository;
 
-repositories {
-    mavenCentral()
+public class ConsoleDemoService implements DemoService {
+    private final DemoRepository demoRepository;
+
+    public ConsoleDemoService(DemoRepository demoRepository) {
+        this.demoRepository = demoRepository;
+    }
+
+    @Override
+    public void demonstrate() {
+        System.out.println("Demonstrated to console, domain: " + demoRepository.get());
+    }
 }

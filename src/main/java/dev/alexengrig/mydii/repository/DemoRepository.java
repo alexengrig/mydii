@@ -14,13 +14,10 @@
  * limitations under the License.
  */
 
-plugins {
-    id 'java'
-}
+package dev.alexengrig.mydii.repository;
 
-group 'dev.alexengrig'
-version '1.0-SNAPSHOT'
+import dev.alexengrig.mydii.domain.DemoDomain;
 
-repositories {
-    mavenCentral()
+public interface DemoRepository {
+    DemoDomain get();
 }
