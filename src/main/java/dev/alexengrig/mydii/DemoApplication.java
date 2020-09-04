@@ -17,16 +17,17 @@
 package dev.alexengrig.mydii;
 
 import dev.alexengrig.mydii.domain.DemoDomain;
-import dev.alexengrig.mydii.repository.DemoRepository;
 import dev.alexengrig.mydii.repository.PermanentDemoRepository;
 import dev.alexengrig.mydii.service.ConsoleDemoService;
 import dev.alexengrig.mydii.service.DemoService;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 public class DemoApplication {
     public static void main(String[] args) {
-        DemoDomain domain = new DemoDomain();
-        DemoRepository repository = new PermanentDemoRepository(domain);
-        DemoService service = new ConsoleDemoService(repository);
+        Class<?>[] classes = {DemoDomain.class, PermanentDemoRepository.class, ConsoleDemoService.class};
+        ApplicationContext context = new AnnotationConfigApplicationContext(classes);
+        DemoService service = context.getBean(DemoService.class);
         service.demonstrate();
     }
 }

@@ -24,3 +24,7 @@ version '1.0-SNAPSHOT'
 repositories {
     mavenCentral()
 }
+
+dependencies {
+    implementation 'org.springframework:spring-context:5.2.8.RELEASE'
+}
