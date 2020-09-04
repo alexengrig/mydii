@@ -17,16 +17,19 @@
 package dev.alexengrig.mydii;
 
 import dev.alexengrig.mydii.domain.DemoDomain;
-import dev.alexengrig.mydii.repository.DemoRepository;
 import dev.alexengrig.mydii.repository.PermanentDemoRepository;
 import dev.alexengrig.mydii.service.ConsoleDemoService;
 import dev.alexengrig.mydii.service.DemoService;
+import org.picocontainer.DefaultPicoContainer;
+import org.picocontainer.PicoContainer;
 
 public class DemoApplication {
     public static void main(String[] args) {
-        DemoDomain domain = new DemoDomain();
-        DemoRepository repository = new PermanentDemoRepository(domain);
-        DemoService service = new ConsoleDemoService(repository);
+        PicoContainer container = new DefaultPicoContainer()
+                .addComponent(DemoDomain.class)
+                .addComponent(ConsoleDemoService.class)
+                .addComponent(PermanentDemoRepository.class);
+        DemoService service = container.getComponent(DemoService.class);
         service.demonstrate();
     }
 }
