@@ -16,7 +16,7 @@
 
 package dev.alexengrig.mydii.configuration;
 
-import dev.alexengrig.mydii.DependencyFinder;
+import dev.alexengrig.mydii.finder.DependencyFinder;
 
 public interface DependencyConfiguration {
     DependencyFinder getFinder();

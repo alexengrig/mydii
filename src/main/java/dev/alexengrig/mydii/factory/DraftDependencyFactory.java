@@ -16,8 +16,8 @@
 
 package dev.alexengrig.mydii.factory;
 
-import dev.alexengrig.mydii.DependencyFinder;
 import dev.alexengrig.mydii.DependencyStorage;
+import dev.alexengrig.mydii.finder.DependencyFinder;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -26,15 +26,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class DraftDependencyFactory implements DependencyFactory {
-    private final DependencyFinder dependencyFinder;
-
-    public DraftDependencyFactory(DependencyFinder dependencyFinder) {
-        this.dependencyFinder = dependencyFinder;
-    }
-
     @Override
     public <T> T createDependency(Class<T> type, DependencyStorage storage) {
-        Class<T> targetType = getTargetType(type);
+        Class<T> targetType = getTargetType(type, storage);
         Constructor<T> constructor = getConstructor(targetType);
         Parameter[] parameters = constructor.getParameters();
         Object[] dependencies = getDependencies(parameters, storage);
@@ -48,11 +42,12 @@ public class DraftDependencyFactory implements DependencyFactory {
         }
     }
 
-    private <T> Class<T> getTargetType(Class<T> type) {
+    private <T> Class<T> getTargetType(Class<T> type, DependencyStorage storage) {
         if (!type.isInterface()) {
             return type;
         }
-        List<Class<T>> implementations = dependencyFinder.findImplementations(type);
+        DependencyFinder finder = storage.getConfiguration().getFinder();
+        List<Class<T>> implementations = finder.findImplementations(type);
         if (implementations.isEmpty()) {
             throw new IllegalArgumentException("No implementation for interface: " + type);
         } else if (implementations.size() > 1) {

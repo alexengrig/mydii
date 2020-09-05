@@ -16,8 +16,8 @@
 
 package dev.alexengrig.mydii.configuration;
 
-import dev.alexengrig.mydii.DependencyFinder;
-import dev.alexengrig.mydii.PackageScanner;
+import dev.alexengrig.mydii.finder.DependencyFinder;
+import dev.alexengrig.mydii.finder.PackageScanner;
 
 public class DraftDependencyConfiguration implements DependencyConfiguration {
     private final DependencyFinder finder;

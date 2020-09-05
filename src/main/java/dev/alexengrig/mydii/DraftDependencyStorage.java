@@ -40,7 +40,7 @@ public class DraftDependencyStorage implements DependencyStorage {
 
     public DraftDependencyStorage(DependencyConfiguration configuration) {
         this.configuration = configuration;
-        this.factory = new DraftDependencyFactory(configuration.getFinder());
+        this.factory = new DraftDependencyFactory();
         this.setter = new DraftDependencySetter();
         this.initializer = new DraftDependencyInitializer();
         this.proxyFactory = new DraftDependencyProxyFactory();

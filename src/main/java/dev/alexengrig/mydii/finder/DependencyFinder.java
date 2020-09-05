@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package dev.alexengrig.mydii;
+package dev.alexengrig.mydii.finder;
 
 import java.util.List;
 
