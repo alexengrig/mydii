@@ -16,5 +16,14 @@
 
 package dev.alexengrig.mydii.test.repository;
 
-public interface Repository {
+
+public class RepositoryImpl implements Repository {
+    public RepositoryImpl() {
+        System.out.println("Create " + getClass());
+    }
+
+    @Override
+    public String toString() {
+        return "This is repository!";
+    }
 }

@@ -16,16 +16,6 @@
 
 package dev.alexengrig.mydii.test.service;
 
-import dev.alexengrig.mydii.test.repository.Repository;
-
-public class Service {
-    private final Repository repository;
-
-    public Service(Repository repository) {
-        this.repository = repository;
-    }
-
-    public void serve() {
-        System.out.println("This is service with repo: " + repository);
-    }
+public interface Service {
+    void serve();
 }

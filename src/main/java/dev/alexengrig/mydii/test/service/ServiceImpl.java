@@ -14,7 +14,20 @@
  * limitations under the License.
  */
 
-package dev.alexengrig.mydii.test.repository;
+package dev.alexengrig.mydii.test.service;
 
-public interface Repository {
+import dev.alexengrig.mydii.test.repository.Repository;
+
+public class ServiceImpl implements Service {
+    private final Repository repository;
+
+    public ServiceImpl(Repository repository) {
+        this.repository = repository;
+        System.out.println("Create " + getClass());
+    }
+
+    @Override
+    public void serve() {
+        System.out.println("This is service with repo: " + repository);
+    }
 }
