@@ -29,15 +29,19 @@ public class DraftDependencySetter implements DependencySetter {
         for (Field field : fields) {
             if (!Modifier.isFinal(field.getModifiers())) {
                 Object fieldDependency = storage.getDependency(field.getType());
-                try {
-                    if (!field.isAccessible()) {
-                        field.setAccessible(true);
-                    }
-                    field.set(dependency, fieldDependency);
-                } catch (IllegalAccessException e) {
-                    throw new IllegalStateException(e);
-                }
+                setDependency(dependency, field, fieldDependency);
             }
+        }
+    }
+
+    private void setDependency(Object dependency, Field field, Object fieldDependency) {
+        try {
+            if (!field.isAccessible()) {
+                field.setAccessible(true);
+            }
+            field.set(dependency, fieldDependency);
+        } catch (IllegalAccessException e) {
+            throw new IllegalStateException(e);
         }
     }
 }
