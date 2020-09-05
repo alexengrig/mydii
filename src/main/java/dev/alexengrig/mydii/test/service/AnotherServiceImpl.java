@@ -17,6 +17,10 @@
 package dev.alexengrig.mydii.test.service;
 
 public class AnotherServiceImpl implements AnotherService {
+    private void init() {
+        System.out.println("AnotherServiceImpl is initialized!");
+    }
+
     @Override
     public void serveDifferently() {
         System.out.println("This is another service");
