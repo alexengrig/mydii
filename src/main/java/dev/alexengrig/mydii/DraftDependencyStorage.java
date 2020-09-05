@@ -18,6 +18,8 @@ package dev.alexengrig.mydii;
 
 import dev.alexengrig.mydii.configuration.DependencyConfiguration;
 import dev.alexengrig.mydii.configuration.RunnerClassDependencyConfiguration;
+import dev.alexengrig.mydii.factory.DependencyFactory;
+import dev.alexengrig.mydii.factory.DraftDependencyFactory;
 
 public class DraftDependencyStorage implements DependencyStorage {
     private final DependencyFactory factory;
@@ -32,6 +34,8 @@ public class DraftDependencyStorage implements DependencyStorage {
 
     @Override
     public <T> T getDependency(Class<T> type) {
-        return factory.createDependency(type, this::getDependency);
+        T target = factory.createDependency(type, this::getDependency);
+
+        return target;
     }
 }

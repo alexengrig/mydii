@@ -14,7 +14,10 @@
  * limitations under the License.
  */
 
-package dev.alexengrig.mydii;
+package dev.alexengrig.mydii.factory;
+
+import dev.alexengrig.mydii.DependencyFinder;
+import dev.alexengrig.mydii.DependencySupplier;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;

@@ -14,7 +14,9 @@
  * limitations under the License.
  */
 
-package dev.alexengrig.mydii;
+package dev.alexengrig.mydii.factory;
+
+import dev.alexengrig.mydii.DependencySupplier;
 
 public interface DependencyFactory {
     <T> T createDependency(Class<T> type, DependencySupplier dependencySupplier);
