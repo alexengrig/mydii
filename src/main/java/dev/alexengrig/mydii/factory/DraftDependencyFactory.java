@@ -39,9 +39,12 @@ public class DraftDependencyFactory implements DependencyFactory {
         Parameter[] parameters = constructor.getParameters();
         Object[] dependencies = getDependencies(parameters, storage);
         try {
+            if (!constructor.isAccessible()) {
+                constructor.setAccessible(true);
+            }
             return constructor.newInstance(dependencies);
         } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
-            throw new IllegalArgumentException("Constructor: " + constructor, e);
+            throw new IllegalStateException(e);
         }
     }
 
