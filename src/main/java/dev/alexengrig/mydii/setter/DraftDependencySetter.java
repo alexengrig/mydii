@@ -23,7 +23,7 @@ import java.lang.reflect.Modifier;
 
 public class DraftDependencySetter implements DependencySetter {
     @Override
-    public void setDependency(Object dependency, DependencyStorage storage) {
+    public <T> void setDependency(T dependency, DependencyStorage storage) {
         Class<?> type = dependency.getClass();
         Field[] fields = type.getDeclaredFields();
         for (Field field : fields) {
@@ -35,7 +35,7 @@ public class DraftDependencySetter implements DependencySetter {
     }
 
     @Override
-    public boolean isNeeded(Object dependency, DependencyStorage storage) {
+    public <T> boolean isNeeded(T dependency, DependencyStorage storage) {
         return true;
     }
 

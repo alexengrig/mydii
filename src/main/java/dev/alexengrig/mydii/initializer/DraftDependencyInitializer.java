@@ -23,14 +23,14 @@ import java.lang.reflect.Method;
 
 public class DraftDependencyInitializer implements DependencyInitializer {
     @Override
-    public void initDependency(Object dependency, DependencyStorage storage) {
+    public <T> void initDependency(T dependency, DependencyStorage storage) {
         Class<?> type = dependency.getClass();
         Method method = getInitMethod(type);
         invokeMethod(method, dependency);
     }
 
     @Override
-    public boolean isNeeded(Object dependency, DependencyStorage storage) {
+    public <T> boolean isNeeded(T dependency, DependencyStorage storage) {
         return hasInitMethod(dependency.getClass());
     }
 

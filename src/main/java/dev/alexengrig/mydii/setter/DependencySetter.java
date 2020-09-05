@@ -19,11 +19,11 @@ package dev.alexengrig.mydii.setter;
 import dev.alexengrig.mydii.DependencyStorage;
 
 public interface DependencySetter {
-    void setDependency(Object dependency, DependencyStorage storage);
+    <T> void setDependency(T dependency, DependencyStorage storage);
 
-    boolean isNeeded(Object dependency, DependencyStorage storage);
+    <T> boolean isNeeded(T dependency, DependencyStorage storage);
 
-    default boolean setDependencyIfNeeded(Object dependency, DependencyStorage storage) {
+    default <T> boolean setDependencyIfNeeded(T dependency, DependencyStorage storage) {
         boolean needed = isNeeded(dependency, storage);
         if (needed) {
             setDependency(dependency, storage);
