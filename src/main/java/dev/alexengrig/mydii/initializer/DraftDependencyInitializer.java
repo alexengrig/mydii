@@ -51,12 +51,12 @@ public class DraftDependencyInitializer implements DependencyInitializer {
         }
     }
 
-    private void invokeMethod(Method method, Object dependency) {
+    private void invokeMethod(Method method, Object object) {
         try {
             if (!method.isAccessible()) {
                 method.setAccessible(true);
             }
-            method.invoke(dependency);
+            method.invoke(object);
         } catch (IllegalAccessException | InvocationTargetException e) {
             throw new IllegalStateException(e);
         }
