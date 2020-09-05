@@ -50,7 +50,7 @@ public class DraftDependencyStorage implements DependencyStorage {
     @Override
     public <T> T getDependency(Class<T> type) {
         T target = factory.createDependency(type, this);
-        setter.setDependencies(target, this);
+        setter.setDependencyIfNeeded(target, this);
         initializer.initDependencyIfNeeded(target, this);
         return target;
     }

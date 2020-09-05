@@ -23,23 +23,28 @@ import java.lang.reflect.Modifier;
 
 public class DraftDependencySetter implements DependencySetter {
     @Override
-    public void setDependencies(Object dependency, DependencyStorage storage) {
+    public void setDependency(Object dependency, DependencyStorage storage) {
         Class<?> type = dependency.getClass();
         Field[] fields = type.getDeclaredFields();
         for (Field field : fields) {
             if (!Modifier.isFinal(field.getModifiers())) {
                 Object fieldDependency = storage.getDependency(field.getType());
-                setDependency(dependency, field, fieldDependency);
+                setField(field, dependency, fieldDependency);
             }
         }
     }
 
-    private void setDependency(Object dependency, Field field, Object fieldDependency) {
+    @Override
+    public boolean isNeeded(Object dependency, DependencyStorage storage) {
+        return true;
+    }
+
+    private void setField(Field field, Object object, Object value) {
         try {
             if (!field.isAccessible()) {
                 field.setAccessible(true);
             }
-            field.set(dependency, fieldDependency);
+            field.set(object, value);
         } catch (IllegalAccessException e) {
             throw new IllegalStateException(e);
         }
