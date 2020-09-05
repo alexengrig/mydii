@@ -34,8 +34,6 @@ public class DraftDependencyStorage implements DependencyStorage {
 
     @Override
     public <T> T getDependency(Class<T> type) {
-        T target = factory.createDependency(type, this::getDependency);
-
-        return target;
+        return factory.createDependency(type, this);
     }
 }

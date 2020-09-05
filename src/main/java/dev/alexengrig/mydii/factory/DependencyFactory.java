@@ -16,8 +16,8 @@
 
 package dev.alexengrig.mydii.factory;
 
-import dev.alexengrig.mydii.DependencySupplier;
+import dev.alexengrig.mydii.DependencyStorage;
 
 public interface DependencyFactory {
-    <T> T createDependency(Class<T> type, DependencySupplier dependencySupplier);
+    <T> T createDependency(Class<T> type, DependencyStorage storage);
 }

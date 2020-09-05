@@ -17,7 +17,7 @@
 package dev.alexengrig.mydii.factory;
 
 import dev.alexengrig.mydii.DependencyFinder;
-import dev.alexengrig.mydii.DependencySupplier;
+import dev.alexengrig.mydii.DependencyStorage;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -33,11 +33,11 @@ public class DraftDependencyFactory implements DependencyFactory {
     }
 
     @Override
-    public <T> T createDependency(Class<T> type, DependencySupplier dependencySupplier) {
+    public <T> T createDependency(Class<T> type, DependencyStorage storage) {
         Class<T> targetType = getTargetType(type);
         Constructor<T> constructor = getConstructor(targetType);
         Parameter[] parameters = constructor.getParameters();
-        Object[] dependencies = getDependencies(parameters, dependencySupplier);
+        Object[] dependencies = getDependencies(parameters, storage);
         try {
             return constructor.newInstance(dependencies);
         } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
@@ -68,13 +68,13 @@ public class DraftDependencyFactory implements DependencyFactory {
         return constructors[0];
     }
 
-    private Object[] getDependencies(Parameter[] parameters, DependencySupplier dependencySupplier) {
+    private Object[] getDependencies(Parameter[] parameters, DependencyStorage storage) {
         int parameterCount = parameters.length;
         Object[] dependencies = new Object[parameterCount];
         for (int i = 0; i < parameterCount; i++) {
             Parameter parameter = parameters[i];
             Class<?> parameterType = parameter.getType();
-            dependencies[i] = dependencySupplier.supply(parameterType);
+            dependencies[i] = storage.getDependency(parameterType);
         }
         return dependencies;
     }
