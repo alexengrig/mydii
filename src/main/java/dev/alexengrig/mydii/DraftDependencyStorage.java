@@ -16,26 +16,22 @@
 
 package dev.alexengrig.mydii;
 
+import dev.alexengrig.mydii.configuration.DependencyConfiguration;
+import dev.alexengrig.mydii.configuration.RunnerClassDependencyConfiguration;
+
 public class DraftDependencyStorage implements DependencyStorage {
-    private final DependencyFactory dependencyFactory;
+    private final DependencyFactory factory;
 
     public DraftDependencyStorage() {
-        Class<?> baseClass = getBaseClass();
-        DependencyFinder dependencyFinder = new PackageScanner(baseClass);
-        this.dependencyFactory = new DraftDependencyFactory(dependencyFinder);
+        this(new RunnerClassDependencyConfiguration());
     }
 
-    private Class<?> getBaseClass() {
-        try {
-            String className = new Throwable().getStackTrace()[1].getClassName();
-            return Class.forName(className);
-        } catch (Exception e) {
-            throw new IllegalStateException("Failed to get base class");
-        }
+    public DraftDependencyStorage(DependencyConfiguration configuration) {
+        this.factory = new DraftDependencyFactory(configuration.getFinder());
     }
 
     @Override
     public <T> T getDependency(Class<T> type) {
-        return dependencyFactory.createDependency(type, this::getDependency);
+        return factory.createDependency(type, this::getDependency);
     }
 }
