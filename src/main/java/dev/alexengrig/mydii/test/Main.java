@@ -17,12 +17,12 @@
 package dev.alexengrig.mydii.test;
 
 import dev.alexengrig.mydii.DependencyStorage;
-import dev.alexengrig.mydii.ScanDependencyStorage;
+import dev.alexengrig.mydii.DraftDependencyStorage;
 import dev.alexengrig.mydii.test.service.Service;
 
 public class Main {
     public static void main(String[] args) {
-        DependencyStorage storage = new ScanDependencyStorage();
+        DependencyStorage storage = new DraftDependencyStorage();
         Service service = storage.getDependency(Service.class);
         service.serve();
     }
