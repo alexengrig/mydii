@@ -16,20 +16,9 @@
 
 package dev.alexengrig.mydii.test.service;
 
-import dev.alexengrig.mydii.test.repository.Repository;
-
-public class ServiceImpl implements Service {
-    private final Repository repository;
-    private AnotherService anotherService;
-
-    public ServiceImpl(Repository repository) {
-        this.repository = repository;
-        System.out.println("Create " + getClass());
-    }
-
+public class AnotherServiceImpl implements AnotherService {
     @Override
-    public void serve() {
-        System.out.println("This is service with repo: " + repository);
-        anotherService.serveDifferently();
+    public void serveDifferently() {
+        System.out.println("This is another service");
     }
 }
