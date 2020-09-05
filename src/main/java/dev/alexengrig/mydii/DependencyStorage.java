@@ -16,6 +16,10 @@
 
 package dev.alexengrig.mydii;
 
+import dev.alexengrig.mydii.configuration.DependencyConfiguration;
+
 public interface DependencyStorage {
+    DependencyConfiguration getConfiguration();
+
     <T> T getDependency(Class<T> type);
 }
