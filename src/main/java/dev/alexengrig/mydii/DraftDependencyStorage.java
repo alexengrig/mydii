@@ -22,6 +22,8 @@ import dev.alexengrig.mydii.factory.DependencyFactory;
 import dev.alexengrig.mydii.factory.DraftDependencyFactory;
 import dev.alexengrig.mydii.initializer.DependencyInitializer;
 import dev.alexengrig.mydii.initializer.DraftDependencyInitializer;
+import dev.alexengrig.mydii.keeper.DependencyKeeper;
+import dev.alexengrig.mydii.keeper.DraftDependencyKeeper;
 import dev.alexengrig.mydii.proxy.DependencyProxyFactory;
 import dev.alexengrig.mydii.proxy.DraftDependencyProxyFactory;
 import dev.alexengrig.mydii.setter.DependencySetter;
@@ -29,6 +31,7 @@ import dev.alexengrig.mydii.setter.DraftDependencySetter;
 
 public class DraftDependencyStorage implements DependencyStorage {
     private final DependencyConfiguration configuration;
+    private final DependencyKeeper keeper;
     private final DependencyFactory factory;
     private final DependencySetter setter;
     private final DependencyInitializer initializer;
@@ -40,6 +43,7 @@ public class DraftDependencyStorage implements DependencyStorage {
 
     public DraftDependencyStorage(DependencyConfiguration configuration) {
         this.configuration = configuration;
+        this.keeper = new DraftDependencyKeeper();
         this.factory = new DraftDependencyFactory();
         this.setter = new DraftDependencySetter();
         this.initializer = new DraftDependencyInitializer();
@@ -53,9 +57,14 @@ public class DraftDependencyStorage implements DependencyStorage {
 
     @Override
     public <T> T getDependency(Class<T> type) {
+        if (keeper.hasDependency(type)) {
+            return keeper.getDependency(type);
+        }
         T target = factory.createDependency(type, this);
         setter.setDependencyIfNeeded(target, this);
         initializer.initDependencyIfNeeded(target, this);
-        return proxyFactory.createDependencyProxyIfNeeded(target, this);
+        T proxy = proxyFactory.createDependencyProxyIfNeeded(target, this);
+        keeper.keepDependency(type, proxy);
+        return proxy;
     }
 }
