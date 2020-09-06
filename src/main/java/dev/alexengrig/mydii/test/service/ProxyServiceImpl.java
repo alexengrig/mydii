@@ -17,6 +17,10 @@
 package dev.alexengrig.mydii.test.service;
 
 public class ProxyServiceImpl implements ProxyService {
+    public ProxyServiceImpl() {
+        System.out.println("Create " + getClass());
+    }
+
     @Override
     public void proxy(String message) {
         System.out.println("This is ProxyServiceImpl with message: " + message);

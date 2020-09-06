@@ -16,13 +16,22 @@
 
 package dev.alexengrig.mydii.test.service;
 
+import dev.alexengrig.mydii.test.repository.Repository;
+
 public class AnotherServiceImpl implements AnotherService {
+    private final Repository repository;
+
+    public AnotherServiceImpl(Repository repository) {
+        this.repository = repository;
+        System.out.println("Create " + getClass());
+    }
+
     private void init() {
-        System.out.println("AnotherServiceImpl is initialized!");
+        System.out.println("Init " + getClass());
     }
 
     @Override
     public void serveDifferently() {
-        System.out.println("This is another service");
+        System.out.println("This is another service with repository: " + repository);
     }
 }
