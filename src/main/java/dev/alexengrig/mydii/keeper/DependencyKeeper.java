@@ -16,10 +16,26 @@
 
 package dev.alexengrig.mydii.keeper;
 
+import dev.alexengrig.mydii.processor.context.ProxyContext;
+import dev.alexengrig.mydii.processor.context.TypeContext;
+
 public interface DependencyKeeper {
     <T> boolean hasDependency(Class<T> type);
 
+    default <T> boolean hasDependency(TypeContext<T> context) {
+        return hasDependency(context.getType());
+    }
+
     <T> T getDependency(Class<T> type);
 
+    default <T> T getDependency(TypeContext<T> context) {
+        return getDependency(context.getType());
+    }
+
     <T> void keepDependency(Class<T> type, T dependency);
+
+    default <T> T keepDependency(ProxyContext<T> context) {
+        keepDependency(context.getType(), context.getProxy());
+        return context.getProxy();
+    }
 }
