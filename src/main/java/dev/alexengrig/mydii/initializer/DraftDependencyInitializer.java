@@ -17,30 +17,20 @@
 package dev.alexengrig.mydii.initializer;
 
 import dev.alexengrig.mydii.DependencyStorage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 public class DraftDependencyInitializer implements DependencyInitializer {
+    private static final Logger LOG = LoggerFactory.getLogger(DraftDependencyInitializer.class);
+
     @Override
-    public <T> void initDependency(T dependency, DependencyStorage storage) {
-        Class<?> type = dependency.getClass();
+    public <T> void initDependency(T object, DependencyStorage storage) {
+        Class<?> type = object.getClass();
         Method method = getInitMethod(type);
-        invokeMethod(method, dependency);
-    }
-
-    @Override
-    public <T> boolean isNeeded(T dependency, DependencyStorage storage) {
-        return hasInitMethod(dependency.getClass());
-    }
-
-    private boolean hasInitMethod(Class<?> type) {
-        try {
-            type.getDeclaredMethod("init");
-            return true;
-        } catch (NoSuchMethodException e) {
-            return false;
-        }
+        invokeMethod(method, object);
     }
 
     private Method getInitMethod(Class<?> type) {
@@ -58,7 +48,22 @@ public class DraftDependencyInitializer implements DependencyInitializer {
             }
             method.invoke(object);
         } catch (IllegalAccessException | InvocationTargetException e) {
-            throw new IllegalStateException(e);
+            throw new IllegalStateException("Exception of invoking method", e);
+        }
+    }
+
+    @Override
+    public <T> boolean isNeeded(T object, DependencyStorage storage) {
+        return hasInitMethod(object.getClass());
+    }
+
+    private boolean hasInitMethod(Class<?> type) {
+        try {
+            type.getDeclaredMethod("init");
+            return true;
+        } catch (NoSuchMethodException e) {
+            LOG.debug("Class has no 'init' method: {}", type.getName());
+            return false;
         }
     }
 }

@@ -19,14 +19,14 @@ package dev.alexengrig.mydii.initializer;
 import dev.alexengrig.mydii.DependencyStorage;
 
 public interface DependencyInitializer {
-    <T> void initDependency(T dependency, DependencyStorage storage);
+    <T> void initDependency(T object, DependencyStorage storage);
 
-    <T> boolean isNeeded(T dependency, DependencyStorage storage);
+    <T> boolean isNeeded(T object, DependencyStorage storage);
 
-    default <T> boolean initDependencyIfNeeded(T dependency, DependencyStorage storage) {
-        boolean needed = isNeeded(dependency, storage);
+    default <T> boolean initDependencyIfNeeded(T object, DependencyStorage storage) {
+        boolean needed = isNeeded(object, storage);
         if (needed) {
-            initDependency(dependency, storage);
+            initDependency(object, storage);
         }
         return needed;
     }
