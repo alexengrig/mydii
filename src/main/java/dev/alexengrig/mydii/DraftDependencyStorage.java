@@ -18,24 +18,30 @@ package dev.alexengrig.mydii;
 
 import dev.alexengrig.mydii.configuration.DependencyConfiguration;
 import dev.alexengrig.mydii.configuration.RunnerClassDependencyConfiguration;
-import dev.alexengrig.mydii.factory.DependencyFactory;
-import dev.alexengrig.mydii.factory.DraftDependencyFactory;
-import dev.alexengrig.mydii.initializer.DependencyInitializer;
-import dev.alexengrig.mydii.initializer.DraftDependencyInitializer;
 import dev.alexengrig.mydii.keeper.DependencyKeeper;
 import dev.alexengrig.mydii.keeper.DraftDependencyKeeper;
-import dev.alexengrig.mydii.proxy.DependencyProxyFactory;
-import dev.alexengrig.mydii.proxy.DraftDependencyProxyFactory;
-import dev.alexengrig.mydii.setter.DependencySetter;
-import dev.alexengrig.mydii.setter.DraftDependencySetter;
+import dev.alexengrig.mydii.processor.context.DependencyContext;
+import dev.alexengrig.mydii.processor.context.DraftDependencyContext;
+import dev.alexengrig.mydii.processor.context.ObjectContext;
+import dev.alexengrig.mydii.processor.context.ProxyContext;
+import dev.alexengrig.mydii.processor.context.TypeContext;
+import dev.alexengrig.mydii.processor.creation.DependencyCreationProcessor;
+import dev.alexengrig.mydii.processor.creation.DraftDependencyCreationProcessor;
+import dev.alexengrig.mydii.processor.initializing.DependencyInitializingProcessor;
+import dev.alexengrig.mydii.processor.initializing.DraftDependencyInitializingProcessor;
+import dev.alexengrig.mydii.processor.proxying.DependencyProxyingProcessor;
+import dev.alexengrig.mydii.processor.proxying.DraftDependencyProxyingProcessor;
+import dev.alexengrig.mydii.processor.setting.DependencySettingProcessor;
+import dev.alexengrig.mydii.processor.setting.DraftDependencySettingProcessor;
 
 public class DraftDependencyStorage implements DependencyStorage {
     private final DependencyConfiguration configuration;
     private final DependencyKeeper keeper;
-    private final DependencyFactory factory;
-    private final DependencySetter setter;
-    private final DependencyInitializer initializer;
-    private final DependencyProxyFactory proxyFactory;
+    private final DependencyCreationProcessor creationProcessor;
+    private final DependencySettingProcessor settingProcessor;
+    private final DependencyInitializingProcessor initializingProcessor;
+    private final DependencyProxyingProcessor proxyingProcessor;
+    private final DependencyContext context;
 
     public DraftDependencyStorage() {
         this(new RunnerClassDependencyConfiguration());
@@ -44,10 +50,11 @@ public class DraftDependencyStorage implements DependencyStorage {
     public DraftDependencyStorage(DependencyConfiguration configuration) {
         this.configuration = configuration;
         this.keeper = new DraftDependencyKeeper();
-        this.factory = new DraftDependencyFactory();
-        this.setter = new DraftDependencySetter();
-        this.initializer = new DraftDependencyInitializer();
-        this.proxyFactory = new DraftDependencyProxyFactory();
+        this.creationProcessor = new DraftDependencyCreationProcessor();
+        this.settingProcessor = new DraftDependencySettingProcessor();
+        this.initializingProcessor = new DraftDependencyInitializingProcessor();
+        this.proxyingProcessor = new DraftDependencyProxyingProcessor();
+        this.context = new DraftDependencyContext(this);
     }
 
     @Override
@@ -57,14 +64,14 @@ public class DraftDependencyStorage implements DependencyStorage {
 
     @Override
     public <T> T getDependency(Class<T> type) {
-        if (keeper.hasDependency(type)) {
-            return keeper.getDependency(type);
+        TypeContext<T> typeContext = context.withType(type);
+        if (keeper.hasDependency(typeContext)) {
+            return keeper.getDependency(typeContext);
         }
-        T target = factory.createDependency(type, this);
-        setter.setDependencyIfNeeded(target, this);
-        initializer.initDependencyIfNeeded(target, this);
-        T proxy = proxyFactory.createDependencyProxyIfNeeded(target, this);
-        keeper.keepDependency(type, proxy);
-        return proxy;
+        ObjectContext<T> objectContext = creationProcessor.createDependency(typeContext);
+        objectContext = settingProcessor.setDependency(objectContext);
+        objectContext = initializingProcessor.initDependency(objectContext);
+        ProxyContext<T> proxyContext = proxyingProcessor.proxyDependency(objectContext);
+        return keeper.keepDependency(proxyContext);
     }
 }
