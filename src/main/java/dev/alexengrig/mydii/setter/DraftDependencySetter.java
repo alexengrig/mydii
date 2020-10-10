@@ -17,25 +17,33 @@
 package dev.alexengrig.mydii.setter;
 
 import dev.alexengrig.mydii.DependencyStorage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 
 public class DraftDependencySetter implements DependencySetter {
+    private static final Logger LOG = LoggerFactory.getLogger(DraftDependencySetter.class);
+
     @Override
-    public <T> void setDependency(T dependency, DependencyStorage storage) {
-        Class<?> type = dependency.getClass();
+    public <T> void setDependency(T object, DependencyStorage storage) {
+        Class<?> type = object.getClass();
         Field[] fields = type.getDeclaredFields();
         for (Field field : fields) {
             if (!Modifier.isFinal(field.getModifiers())) {
-                Object fieldDependency = storage.getDependency(field.getType());
-                setField(field, dependency, fieldDependency);
+                Object fieldObject = storage.getDependency(field.getType());
+                LOG.debug("Set value to field: {} - {}.{}",
+                        fieldObject.getClass().getName(), field.getDeclaringClass().getTypeName(), field.getName());
+                setField(field, object, fieldObject);
+            } else {
+                LOG.debug("Field is final: {}.{}", field.getDeclaringClass().getTypeName(), field.getName());
             }
         }
     }
 
     @Override
-    public <T> boolean isNeeded(T dependency, DependencyStorage storage) {
+    public <T> boolean isNeeded(T object, DependencyStorage storage) {
         return true;
     }
 
@@ -46,7 +54,7 @@ public class DraftDependencySetter implements DependencySetter {
             }
             field.set(object, value);
         } catch (IllegalAccessException e) {
-            throw new IllegalStateException(e);
+            throw new IllegalStateException("Exception of setting field value", e);
         }
     }
 }
