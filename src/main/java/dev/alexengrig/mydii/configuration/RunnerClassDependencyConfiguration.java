@@ -16,7 +16,7 @@
 
 package dev.alexengrig.mydii.configuration;
 
-import java.util.StringJoiner;
+import dev.alexengrig.util.WhereIsFrom;
 
 public class RunnerClassDependencyConfiguration extends DraftDependencyConfiguration {
     public RunnerClassDependencyConfiguration() {
@@ -24,20 +24,12 @@ public class RunnerClassDependencyConfiguration extends DraftDependencyConfigura
     }
 
     private static Class<?> getRunnerClass() {
-        StackTraceElement[] stackTrace = new Throwable().getStackTrace();
         try {
-            String className = stackTrace[stackTrace.length - 1].getClassName();
+            String className = WhereIsFrom.up(2).getClassName();
             System.out.println("Runner class name: " + className);
             return Class.forName(className);
         } catch (Exception e) {
-            StringJoiner joiner = new StringJoiner("\n");
-            joiner.add("Failed to get runner class from stack trace:");
-            for (int i = 0, l = stackTrace.length; i < l; i++) {
-                StackTraceElement element = stackTrace[i];
-                joiner.add(String.format("%d - %s#%s:%d",
-                        i, element.getClassName(), element.getMethodName(), element.getLineNumber()));
-            }
-            throw new IllegalStateException(joiner.toString(), e);
+            throw new IllegalStateException("Failed to get runner class", e);
         }
     }
 }
